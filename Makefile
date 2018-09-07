@@ -84,7 +84,7 @@ CXX = g++
 AR  = ar
 LD  = $(CC) $(CXXFLAGS) $(TARGET_ARCH)
 
-INCLUDE  = -I. $(patsubst %,-I%,$(VPATH))
+INCLUDE  = $(patsubst %,-I%,$(VPATH))
 CFLAGS   = -W -Wall $(INCLUDE)
 CXXFLAGS = $(CFLAGS)
 DBGFLAGS = -D_DEBUG -g
