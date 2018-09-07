@@ -1,7 +1,7 @@
 /* vim: set et sts=4 sw=4: */
 
 /*
- * Copyright (C) 2008-2014 Wu Yongwei
+ * Copyright (C) 2008-2018 Wu Yongwei
  *
  *   Except the code copied from Vim (marked below), which is
  *   copyrighted by Bram Moolenaar
@@ -43,7 +43,7 @@ int width = 72;
 int keep_indent = 0;
 int verbose = 0;
 
-utf16_t buffer[MAXCHARS];
+wchar_t buffer[MAXCHARS];
 char brks[MAXCHARS];
 
 
@@ -235,7 +235,7 @@ static void usage(void)
 {
     fprintf(stderr,
         "Usage: breaktext [OPTION]... <Input File> [Output File]\n"
-        "$Date: 2014/12/30 13:50:53 $\n"
+        "Last Change: 2018-09-07 22:12:10 +0800\n"
         "\n"
         "Available options:\n"
         "  -L<locale>   Locale of the console (system locale by default)\n"
@@ -260,12 +260,12 @@ static void usage(void)
     );
 }
 
-static void put_buffer(utf16_t *buffer, size_t begin, size_t end, FILE *fp_out)
+static void put_buffer(wchar_t *buffer, size_t begin, size_t end, FILE *fp_out)
 {
     size_t i;
     for (i = begin; i < end; ++i)
     {
-        putwc((wchar_t)buffer[i], fp_out);
+        putwc(buffer[i], fp_out);
     }
 }
 
@@ -278,9 +278,9 @@ static void put_indent(int indent, FILE *fp_out)
     }
 }
 
-void break_text(utf16_t *buffer, char *brks, size_t len, FILE *fp_out)
+void break_text(wchar_t *buffer, char *brks, size_t len, FILE *fp_out)
 {
-    utf16_t ch;
+    wchar_t ch;
     int w;
     size_t i;
     size_t last_break_pos = 0;
@@ -496,13 +496,25 @@ int main(int argc, char *argv[])
     }
     if (buffer[0] == BOM && c > 1)
     {
-        memmove(buffer, buffer + 1, (--c) * sizeof(utf16_t));
+        memmove(buffer, buffer + 1, (--c) * sizeof(wchar_t));
     }
 
     t2 = pctimer();
 
     init_linebreak();
-    set_linebreaks_utf16(buffer, c, lang, brks);
+    if (sizeof(wchar_t) == 2)
+    {
+        set_linebreaks_utf16((utf16_t*)buffer, c, lang, brks);
+    }
+    else if (sizeof(wchar_t) == 4)
+    {
+        set_linebreaks_utf32((utf32_t*)buffer, c, lang, brks);
+    }
+    else
+    {
+        fprintf(stderr, "Unexpected wchar_t size!\n");
+        exit(1);
+    }
 
     t3 = pctimer();
 
