@@ -565,7 +565,7 @@ void break_text(wchar_t *buffer, char *brks, size_t len, FILE *fp_out)
     {
         if (brks[i] == LINEBREAK_MUSTBREAK)
         {
-            /* Displayed undisplayed characters in the buffer */
+            /* Display undisplayed characters in the buffer */
             put_buffer(buffer, last_break_pos, i, fp_out);
             /* The character causing the explicit break is replaced with \n */
             putwc(L'\n', fp_out);
@@ -658,7 +658,7 @@ void break_text(wchar_t *buffer, char *brks, size_t len, FILE *fp_out)
                 i = last_breakable_pos;
             }
 
-            /* Displayed undisplayed characters in the buffer */
+            /* Display undisplayed characters in the buffer */
             put_buffer(buffer, last_break_pos, last_breakable_pos, fp_out);
 
             /* Output a new line and reset status */
