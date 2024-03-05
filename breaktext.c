@@ -507,7 +507,7 @@ static void usage(void)
 {
     fprintf(stderr,
         "Usage: breaktext [OPTION]... <Input File> [Output File]\n"
-        "Last Change: 2018-09-07 22:50:50 +0800\n"
+        "Last Change: 2024-03-05 22:57:00 +0800 (libunibreak %d.%d)\n"
         "\n"
         "Available options:\n"
         "  -L<locale>   Locale of the console (system locale by default)\n"
@@ -528,7 +528,8 @@ static void usage(void)
         "for I/O: console I/O will be automatically converted to/from\n"
         "wchar_t (which is UTF-16) according to the system locale setting\n"
         "(overridable with -L), but files (excepting the stdin/stdout case)\n"
-        "will always be in just wchar_t (UTF-16).\n"
+        "will always be in just wchar_t (UTF-16).\n",
+        (unibreak_version >> 8), (unibreak_version & 0xFF)
     );
 }
 
